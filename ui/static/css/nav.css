@@ -1,0 +1,54 @@
+#logo {
+  float: left;
+  padding-left: 5px;
+  padding-top: 5px;
+}
+
+/* Add a black background color to the top navigation */
+.topnav {
+  background-color: #ddd;
+  overflow: hidden;
+  height: 60px;
+}
+
+/* Style the links inside the navigation bar */
+.topnav a {
+  float: left;
+  color: black;
+  text-align: center;
+  padding: 14px 20px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+/* Change the color of links on hover */
+.topnav a.swap:hover {
+  background-color: #3FB8AF;
+  color: #f2f2f2;
+}
+
+/* Change the color of links on hover */
+.topnav a.refund:hover {
+  background-color: #4CAF50;
+  color: #f2f2f2;
+}
+
+/* Add a color to the main page link */
+.topnav a.home {
+  background-color: #ddd; /* #AB3E5B; */
+  color: black;
+  font-size: 20px;
+  text-decoration: underline;
+}
+
+/* Add a color to the active/current link of swap */
+.topnav a.swap.active {
+  background-color: #3FB8AF;
+  color: white;
+}
+
+/* Add a color to the active/current link of refund */
+.topnav a.refund.active {
+  background-color: #4CAF50;
+  color: white;
+}

@@ -1,0 +1,20 @@
+{{define "base"}}
+<!doctype html>
+<html lang='en'>
+    <head>
+        <meta charset='utf-8'>
+        <title>{{template "title" .}} - Submarine Swaps With Go</title>
+      	<meta name="viewport" content="width=device-width, initial-scale=1">
+      	<link rel="icon" type="image/png" href="/static/images/icons/favicon.ico"/>
+      	<link rel="stylesheet" type="text/css" href="/static/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+      	<link rel="stylesheet" type="text/css" href="/static/css/main.css">
+      	<link rel="stylesheet" type="text/css" href="/static/css/nav.css">
+      </head>
+
+    <body>
+      {{template "topnav" .}}
+      {{template "body" .}}
+      {{template "footer" .}}
+    </body>
+</html>
+{{end}}
