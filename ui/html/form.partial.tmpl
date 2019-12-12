@@ -1,8 +1,23 @@
 {{define "form"}}
           <form class="contact100-form validate-form" method="POST" action="/swap">
+            <div class="wrap-input100 input100-select">
+              <span class="label-input100">Need to Swap</span>
+              <div class="validate-input" data-validate="Select a currency">
+                <select class="selection-2 input100" name="deposit">
+                  <option>Choose Deposit Currency</option>
+                  <option value="bc">Bitcoin</option>
+                  <option value="tb">Bitcoin Testnet</option>
+                  <option value="sb">Bitcoin Simnet</option>
+                  <option value="ltc">Litecoin</option>
+                  <option value="tltc">Litecoin Testnet</option>
+                  <option value="sltc">Litecoin Simnet</option>
+                </select>
+              </div>
+              <span class="focus-input100"></span>
+            </div>
 
             <div class="wrap-input100 validate-input" data-validate="Lightning invoice is required">
-              <span class="label-input100">Lightning invoice</span>
+              <span class="label-input100">To pay a Lightning invoice</span>
               <input class="input100" type="text" name="invoice" placeholder="Enter your Lightning invoice">
               <span class="focus-input100"></span>
             </div>

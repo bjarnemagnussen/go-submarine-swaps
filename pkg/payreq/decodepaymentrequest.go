@@ -3,11 +3,8 @@ package payreq
 import (
 	"encoding/hex"
 	"fmt"
-	"strings"
 	"time"
-	"unicode"
 
-	"github.com/btcsuite/btcd/chaincfg"
 	"github.com/lightningnetwork/lnd/zpay32"
 )
 
@@ -15,6 +12,7 @@ import (
 type PayReq struct {
 	Invoice     string
 	Destination string
+	Currency    Currency
 	CreatedAt   time.Time
 	Expiry      time.Duration
 	Amount      uint64
@@ -34,8 +32,8 @@ func DecodeInvoice(bolt11 string) (PayReq, error) {
 
 // decodeInvoiceWithCurrency decodes a Lightning network Bolt11 invoice to a PayReq
 // using a provided cryptocurrency.
-func decodeInvoiceWithCurrency(c string, bolt11 string) (PayReq, error) {
-	inv, err := zpay32.Decode(bolt11, &chaincfg.Params{Bech32HRPSegwit: c})
+func decodeInvoiceWithCurrency(c Currency, bolt11 string) (PayReq, error) {
+	inv, err := zpay32.Decode(bolt11, c.Chaincfg)
 	if err != nil {
 		return PayReq{}, fmt.Errorf("Problem decoding invoice")
 	}
@@ -56,6 +54,7 @@ func decodeInvoiceWithCurrency(c string, bolt11 string) (PayReq, error) {
 
 	return PayReq{
 		Invoice:     bolt11,
+		Currency:    c,
 		Destination: hex.EncodeToString(inv.Destination.SerializeCompressed()),
 		CreatedAt:   inv.Timestamp,
 		Expiry:      inv.Expiry(),
@@ -65,26 +64,27 @@ func decodeInvoiceWithCurrency(c string, bolt11 string) (PayReq, error) {
 	}, nil
 }
 
-// GetCurrencyFromInvoice returns the Bech32 HRP of a Lightning network Bolt11
-// invoice without validating the checksum of the invoice.
-func GetCurrencyFromInvoice(bolt11 string) (string, error) {
-	// Check that the invoice field is not blank.
-	if strings.TrimSpace(bolt11) == "" {
-		return "", fmt.Errorf("Lightning invoice is required")
-	}
-
-	// The Bech32 human-readable part for the currency is everything after the
-	// first 'ln' until the first '1'.
-	one := strings.IndexByte(bolt11, '1')
-	if one < 3 || one+7 > len(bolt11) {
-		return "", fmt.Errorf("Invalid index of 1")
-	}
-	hrp := bolt11[2:one]
-
-	// Treat anything inside the HRP up to a digit as the currency prefix.
-	amntIdx := strings.IndexFunc(hrp+"0", func(c rune) bool {
-		return unicode.IsDigit(c)
-	})
-
-	return hrp[:amntIdx], nil
-}
+// ValidateSameNetwork takes a Bech32 HRP and invoice to check if they are on
+// the same network.
+// func ValidateSameNetwork(hrp string, invoice string) error {
+// 	// Checking Bech32 HRP
+// 	depositCurrency, ok := bech32ToCurrency[hrp]
+// 	if !ok {
+// 		// Deposit currency not supported
+// 		return fmt.Errorf("Deposit currency not supported")
+// 	}
+//
+// 	// Checking invoice currency
+// 	invoiceCurrency, err := GetCurrencyFromInvoice(invoice)
+// 	if err != nil {
+// 		// Lightning currency not supported
+// 		return err
+// 	}
+//
+// 	// Illegal to convert e.g. from testnet to mainnet and vice versa
+// 	if depositCurrency.Chaincfg.Name != invoiceCurrency.Chaincfg.Name {
+// 		return fmt.Errorf("Using this currency to pay this invoice is not supported")
+// 	}
+//
+// 	return nil
+// }
